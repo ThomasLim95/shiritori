@@ -34,7 +34,7 @@
 <body>
     <h1>Shiritori Game</h1>
     <p>Enter a word that starts with the last letter of the previous word!</p>
-    <input type="text" id="wordInput" placeholder="Enter a word">
+    <input type="text" id="wordInput" placeholder="Enter a word" onkeypress="handleKeyPress(event)">
     <button onclick="submitWord()">Submit</button>
     <button onclick="resetGame()">Reset</button>
     <p id="status"></p>
@@ -51,11 +51,20 @@
         let score = 0;
         let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
 
-        function submitWord() {
+        async function isValidWord(word) {
+            let response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+            return response.ok;
+        }
+
+        async function submitWord() {
             let input = document.getElementById('wordInput').value.trim().toLowerCase();
             let status = document.getElementById('status');
             
             if (input === "") return;
+            if (!(await isValidWord(input))) {
+                status.textContent = "Invalid word! Please enter a real word.";
+                return;
+            }
             if (words.length > 0) {
                 let lastWord = words[words.length - 1];
                 if (input[0] !== lastWord[lastWord.length - 1]) {
@@ -75,6 +84,12 @@
             document.getElementById('words').innerHTML = words.join(' → ');
             document.getElementById('wordInput').value = "";
             status.textContent = "";
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                submitWord();
+            }
         }
 
         function resetGame() {
