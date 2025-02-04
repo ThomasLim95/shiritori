@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shiritori Game</title>
+    <style>
+        body { 
+            font-family: 'Press Start 2P', cursive;
+            text-align: center; 
+            padding: 20px; 
+            background-color: #fce4ec;
+            color: #880e4f;
+        }
+        input, button { 
+            padding: 10px; 
+            font-size: 16px; 
+            border: 2px solid #880e4f;
+            background-color: #f8bbd0;
+            color: #880e4f;
+            font-family: 'Press Start 2P', cursive;
+        }
+        button:hover {
+            background-color: #f48fb1;
+        }
+        #words { margin-top: 20px; font-size: 14px; }
+        .scoreboard { margin-top: 20px; }
+        .scoreboard h2 { font-size: 18px; }
+        .scoreboard ul { list-style: none; padding: 0; }
+        .scoreboard li { background: #f8bbd0; padding: 5px; margin: 5px; border-radius: 5px; }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1>Shiritori Game</h1>
+    <p>Enter a word that starts with the last letter of the previous word!</p>
+    <input type="text" id="wordInput" placeholder="Enter a word">
+    <button onclick="submitWord()">Submit</button>
+    <button onclick="resetGame()">Reset</button>
+    <p id="status"></p>
+    <p>Score: <span id="score">0</span></p>
+    <div id="words"></div>
+    
+    <div class="scoreboard">
+        <h2>Top 5 Scores</h2>
+        <ul id="highScores"></ul>
+    </div>
+    
+    <script>
+        let words = [];
+        let score = 0;
+        let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
+
+        function submitWord() {
+            let input = document.getElementById('wordInput').value.trim().toLowerCase();
+            let status = document.getElementById('status');
+            
+            if (input === "") return;
+            if (words.length > 0) {
+                let lastWord = words[words.length - 1];
+                if (input[0] !== lastWord[lastWord.length - 1]) {
+                    status.textContent = "Game Over! The word must start with '" + lastWord[lastWord.length - 1] + "'.";
+                    updateHighScores();
+                    return;
+                }
+                if (words.includes(input)) {
+                    status.textContent = "Game Over! The word has already been used.";
+                    updateHighScores();
+                    return;
+                }
+            }
+            words.push(input);
+            score++;
+            document.getElementById('score').textContent = score;
+            document.getElementById('words').innerHTML = words.join(' → ');
+            document.getElementById('wordInput').value = "";
+            status.textContent = "";
+        }
+
+        function resetGame() {
+            updateHighScores();
+            words = [];
+            score = 0;
+            document.getElementById('score').textContent = score;
+            document.getElementById('words').innerHTML = "";
+            document.getElementById('status').textContent = "";
+        }
+
+        function updateHighScores() {
+            highScores.push(score);
+            highScores.sort((a, b) => b - a);
+            highScores = highScores.slice(0, 5);
+            localStorage.setItem('highScores', JSON.stringify(highScores));
+            displayHighScores();
+        }
+
+        function displayHighScores() {
+            let highScoresList = document.getElementById('highScores');
+            highScoresList.innerHTML = highScores.map(score => `<li>${score}</li>`).join('');
+        }
+        displayHighScores();
+    </script>
+</body>
+</html>
