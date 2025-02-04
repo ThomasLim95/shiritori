@@ -30,6 +30,17 @@
         .scoreboard li { background: #f8bbd0; padding: 5px; margin: 5px; border-radius: 5px; }
         #lastWord { font-size: 18px; font-weight: bold; margin-top: 20px; }
         #nextLetter { font-size: 18px; color: #d81b60; }
+        
+        #dinoFrame {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            width: 100px;
+            height: 100px;
+            background: url('https://i.imgur.com/4Z3mM57.gif') no-repeat center center;
+            background-size: cover;
+            display: none;
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
@@ -49,6 +60,8 @@
         <h2>Top 5 Scores</h2>
         <ul id="highScores"></ul>
     </div>
+    
+    <div id="dinoFrame"></div>
     
     <script>
         let words = [];
@@ -90,6 +103,7 @@
             document.getElementById('nextLetter').textContent = input[input.length - 1];
             document.getElementById('wordInput').value = "";
             status.textContent = "";
+            showDinoAnimation();
         }
 
         function handleKeyPress(event) {
@@ -122,6 +136,14 @@
             highScoresList.innerHTML = highScores.map(score => `<li>${score}</li>`).join('');
         }
         displayHighScores();
+
+        function showDinoAnimation() {
+            let dino = document.getElementById('dinoFrame');
+            dino.style.display = 'block';
+            setTimeout(() => {
+                dino.style.display = 'none';
+            }, 1500);
+        }
     </script>
 </body>
 </html>
