@@ -31,7 +31,7 @@
         #lastWord { font-size: 18px; font-weight: bold; margin-top: 20px; }
         #nextLetter { font-size: 18px; color: #d81b60; }
         
-/*         #dinoFrame {
+        #dinoFrame {
             position: fixed;
             bottom: 10px;
             left: 10px;
@@ -40,7 +40,7 @@
             background: url('https://i.imgur.com/4Z3mM57.gif') no-repeat center center;
             background-size: cover;
             display: none;
-        } */
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
@@ -61,7 +61,7 @@
         <ul id="highScores"></ul>
     </div>
     
-<!--     <div id="dinoFrame"></div> -->
+    <div id="dinoFrame"></div>
     
     <script>
         let words = [];
@@ -85,13 +85,11 @@
             if (words.length > 0) {
                 let lastWord = words[words.length - 1];
                 if (input[0] !== lastWord[lastWord.length - 1]) {
-                    status.textContent = "Game Over! The word must start with '" + lastWord[lastWord.length - 1] + "'.";
-                    updateHighScores();
+                    status.textContent = "Incorrect! The word must start with '" + lastWord[lastWord.length - 1] + "'.";
                     return;
                 }
                 if (words.includes(input)) {
-                    status.textContent = "Game Over! The word has already been used.";
-                    updateHighScores();
+                    status.textContent = "This word has already been used! Try another one.";
                     return;
                 }
             }
