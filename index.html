@@ -28,12 +28,16 @@
         .scoreboard h2 { font-size: 18px; }
         .scoreboard ul { list-style: none; padding: 0; }
         .scoreboard li { background: #f8bbd0; padding: 5px; margin: 5px; border-radius: 5px; }
+        #lastWord { font-size: 18px; font-weight: bold; margin-top: 20px; }
+        #nextLetter { font-size: 18px; color: #d81b60; }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
     <h1>Shiritori Game</h1>
     <p>Enter a word that starts with the last letter of the previous word!</p>
+    <p>Last word: <span id="lastWord">None</span></p>
+    <p>Next letter: <span id="nextLetter">Any</span></p>
     <input type="text" id="wordInput" placeholder="Enter a word" onkeypress="handleKeyPress(event)">
     <button onclick="submitWord()">Submit</button>
     <button onclick="resetGame()">Reset</button>
@@ -82,6 +86,8 @@
             score++;
             document.getElementById('score').textContent = score;
             document.getElementById('words').innerHTML = words.join(' → ');
+            document.getElementById('lastWord').textContent = input;
+            document.getElementById('nextLetter').textContent = input[input.length - 1];
             document.getElementById('wordInput').value = "";
             status.textContent = "";
         }
@@ -99,6 +105,8 @@
             document.getElementById('score').textContent = score;
             document.getElementById('words').innerHTML = "";
             document.getElementById('status').textContent = "";
+            document.getElementById('lastWord').textContent = "None";
+            document.getElementById('nextLetter').textContent = "Any";
         }
 
         function updateHighScores() {
