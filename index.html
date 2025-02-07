@@ -50,10 +50,8 @@
 </head>
 <body>
     <h1>Shiritori Game</h1>
-
     <button onclick="startNormalMode()">Normal Mode</button>
     <button onclick="startRankedMode()">Ranked Mode</button>
-
     
     <div id="normalMode">
         <p>Enter a word that starts with the last letter of the previous word!</p>
@@ -379,11 +377,21 @@
                     return;
                 }
             }
-
             // sendWordToSheet(input);
-
+            words.push(input);
+            score++;
+            document.getElementById('score').textContent = score;
+            document.getElementById('words').innerHTML = words.join(' → ');
+            document.getElementById('lastWord').textContent = input;
+            document.getElementById('nextLetter').textContent = input[input.length - 1];
+            document.getElementById('wordInput').value = "";
+            status.textContent = "";
+            showDinoAnimation();
+            // sendDataToSheet();
+            // Send the word to Google Sheets
+            
+        }
         
-
 
         // async function sendWordToSheet(wo) {
         //     const API_URL = "https://script.google.com/macros/s/AKfycbzuh6hfKMW1eXS0BGWxzUDMGbk37g2WxfEhSlXPJNUBscHkSBdQwJAvDHaI6vVOWzHwpg/exec";
@@ -403,7 +411,7 @@
         //         console.error("Error sending to Google Sheets:", error);
         //     }
         // }
-
+        
         function handleKeyPress(event) {
             if (event.key === "Enter") {
               if (gameMode == 0) {
@@ -452,7 +460,6 @@
                 dino.style.display = 'none';
             }, 1500);
         }
-
     </script>
 </body>
 </html>
