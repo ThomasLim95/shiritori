@@ -118,9 +118,9 @@
             <p id="timer" style = "font-weight: bold;color: #d81b60;font-size: 20px">Time Left: 180s</p>
             <!--<p id="mistakes">Mistakes: 0</p>-->
             <p id = "life">Life: 
-              <img id = "hp1" src="https://github.com/ThomasLim95/shiritori/blob/main/red_heart.png?raw=true" style="width:24px;height:24px;" alt="alternatetext">
-              <img id = "hp2" src="https://github.com/ThomasLim95/shiritori/blob/main/red_heart.png?raw=true" style="width:24px;height:24px;" alt="alternatetext">
-              <img id = "hp3" src="https://github.com/ThomasLim95/shiritori/blob/main/red_heart.png?raw=true" style="width:24px;height:24px;" alt="alternatetext">
+              <img id = "hp1" src="https://github.com/ThomasLim95/shiritori/blob/main/red_heart.png?raw=true" style="width:24px;height:24px;" alt="hp 1">
+              <img id = "hp2" src="https://github.com/ThomasLim95/shiritori/blob/main/red_heart.png?raw=true" style="width:24px;height:24px;" alt="hp 2">
+              <img id = "hp3" src="https://github.com/ThomasLim95/shiritori/blob/main/red_heart.png?raw=true" style="width:24px;height:24px;" alt="hp 3">
             </p>
             <p>Last word: <span id="rankedLastWord" class = "lastWord">None</span></p>
             <p>Next letter: <span id="rankedNextLetter" class = "nextLetter">Any</span></p>
@@ -168,8 +168,8 @@
         let playerName = "";
         let gameMode = 0;  // 0 = normal 1 = rank
         let rankGameStarted = 0; //0 = not started 1 = started
-        let allowedWordList = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"]; //allowed words, but not found in dict api
-
+        const allowedWordList = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"]; //allowed words, but not found in dict api
+        const excludedWordList = ["nigger","fuck"];
         // async function isValidWord(word) {
         //     let response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
         //     return response.ok;
@@ -247,6 +247,12 @@
             let status = document.getElementById('status');
             
             if (input === "") return;
+            
+            if (excludedWordList.includes(input)) {
+              status.textContent = "Invalid word! Please enter a real word.";
+              return;
+            }
+            
             if (!(await isValidWord(input))) {
                 status.textContent = "Invalid word! Please enter a real word.";
                 return;
@@ -271,7 +277,7 @@
             document.getElementById('nextLetter').textContent = input[input.length - 1];
             document.getElementById('wordInput').value = "";
             status.textContent = "";
-            showDinoAnimation();
+            // showDinoAnimation();
             // sendDataToSheet();
             // Send the word to Google Sheets
             
@@ -410,12 +416,21 @@
             resetHp();
         }
         
-        //ranked word validity checker
+        //ranked word logic
         async function submitRankedWord() {
             let input = document.getElementById('rankedWordInput').value.trim().toLowerCase();
             let status = document.getElementById('rankedStatus');
             
             if (input === "") return;
+            
+            if (excludedWordList.includes(input)) {
+              status.textContent = "Invalid word! Please enter a real word.";
+              mistakes++;
+              reduceHp();
+              isGameOver();
+              return;
+            }
+            
             if (!(await isValidWord(input))) {
                 status.textContent = "Invalid word! Please enter a real word.";
                 mistakes++;
@@ -423,10 +438,12 @@
                 // document.getElementById('mistakes').textContent = "Mistakes: " + mistakes;
                 // if (mistakes >= 3) {
                 //   gameOver = 1;
-                  isGameOver();
+                isGameOver();
                 // }
                 return;
             }
+            
+                
             if (input.length < 3){
               status.textContent = "Enter a word with 3 letters or more!";
               mistakes++;
@@ -436,7 +453,7 @@
               //   gameOver = 1;
                 isGameOver();
               // }
-              return
+              return;
             }
             
             if (rankedWords.length > 0) {
@@ -591,28 +608,28 @@
                 
         
         //leaderboard
+        //old high score functions
+        // function updateHighScores() {
+        //     highScores.push(score);
+        //     highScores.sort((a, b) => b - a);
+        //     highScores = highScores.slice(0, 5);
+        //     localStorage.setItem('highScores', JSON.stringify(highScores));
+        //     displayHighScores();
+        // }
 
-        function updateHighScores() {
-            highScores.push(score);
-            highScores.sort((a, b) => b - a);
-            highScores = highScores.slice(0, 5);
-            localStorage.setItem('highScores', JSON.stringify(highScores));
-            displayHighScores();
-        }
+        // function displayHighScores() {
+        //     let highScoresList = document.getElementById('highScores');
+        //     highScoresList.innerHTML = highScores.map(score => `<li>${score}</li>`).join('');
+        // }
+        // displayHighScores();
 
-        function displayHighScores() {
-            let highScoresList = document.getElementById('highScores');
-            highScoresList.innerHTML = highScores.map(score => `<li>${score}</li>`).join('');
-        }
-        displayHighScores();
-
-        function showDinoAnimation() {
-            let dino = document.getElementById('dinoFrame');
-            dino.style.display = 'block';
-            setTimeout(() => {
-                dino.style.display = 'none';
-            }, 1500);
-        }
+        // function showDinoAnimation() {
+        //     let dino = document.getElementById('dinoFrame');
+        //     dino.style.display = 'block';
+        //     setTimeout(() => {
+        //         dino.style.display = 'none';
+        //     }, 1500);
+        // }
         
         //get data from gsheet and display
         async function fetchAndDisplayLeaderboard() {
